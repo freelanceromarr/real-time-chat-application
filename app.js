@@ -4,6 +4,11 @@ const mongoose = require('mongoose');
 const path = require("path");
 const app = express();
 
+//all routers
+const loginRouter= require('./router/loginRoute')
+const UserRouter= require('./router/userRouter')
+const inboxRouter= require('./router/inboxRouter')
+
 //error handler 
 const {defaultErrorHandler, notFoundErrorHandler} = require('./middleware/errorHandle')
 //configuring dotenv package
@@ -31,6 +36,12 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.use(cookieParser(process.env.COOKIE_PARSER_SECRET_KEY))
 
 //route setup    
+app.use('/', loginRouter);
+app.use('/users', UserRouter);
+app.use('/inbox', inboxRouter);
+
+
+
 //error handling 
 app.use(notFoundErrorHandler)
 //default error handler 
