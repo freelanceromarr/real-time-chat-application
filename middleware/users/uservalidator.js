@@ -44,26 +44,51 @@ const uservalidator = [
     ),
 ];
 
-const userValidationErrorHandler = (req, res, next) => {
+// const userValidationErrorHandler = (req, res, next) => {
+//   const errors = validationResult(req);
+//   const errormapping = errors.mapped();
+//   if (errors.isEmpty()) {
+//     next();
+//   } else {
+//     console.log(req.body);
+
+//     if (req.files && req.files.length > 0) {
+//       const { filename } = req.files[0];
+//       unlink(
+//         path.join(__dirname, `../../public/upload/avatar/${filename}`),
+//         (err) => {
+//           if (err) {
+//             console.error(err);
+//           }
+//         }
+//       );
+//     }
+//     res.status(500).json(errormapping);
+//   }
+  
+// };
+
+const userValidationErrorHandler = function (req, res, next) {
   const errors = validationResult(req);
-  const errormapping = errors.mapped();
-  if (errors.isEmpty()) {
+  const mappedErrors = errors.mapped();
+  if (Object.keys(mappedErrors).length === 0) {
     next();
   } else {
-    console.log(req);
-
+    // remove uploaded files
     if (req.files && req.files.length > 0) {
       const { filename } = req.files[0];
       unlink(
-        path.join(__dirname, `../../public/upload/avatar/${filename}`),
+        path.join(__dirname, `/../public/uploads/avatar/${filename}`),
         (err) => {
-          if (err) {
-            console.error(err);
-          }
+          if (err) console.log(err);
         }
       );
     }
+
+    // response the errors
+    res.status(500).json({
+      errors: mappedErrors,
+    });
   }
-  res.status(500).json(errormapping);
 };
 module.exports = { uservalidator, userValidationErrorHandler };

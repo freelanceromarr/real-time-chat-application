@@ -5,6 +5,7 @@ function getUsers(req, res, next) {
 }
 
 async function addUser(req, res, next) {
+  console.log(req.body);
   let newUser;
   const makeHashPassword = await bcrypt.hash(req.body.password, 12);
   if (req.files && req.files.length > 0) {
