@@ -21,10 +21,12 @@ async function getintologin(req, res, next){
             if(passwordvalidation){
                 //object for token generated
                 const userObject= {
+                    userId: user._id,
                     username:user.name, 
                     email: user.email, 
                     mobile: user.mobile,
-                    role: user.role,
+                    avatar: user.avatar || null,
+                    role: user.role || "user",
                 } 
                 //generate token
                 const token= jwt.sign(userObject, process.env.TOKEN_KEY, {

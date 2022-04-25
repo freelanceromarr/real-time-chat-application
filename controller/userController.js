@@ -1,11 +1,26 @@
 const bcrypt = require("bcrypt");
 const User = require("../model/chatusers");
-function getUsers(req, res, next) {
-  res.render("users");
+
+
+// show users list
+async function getUsers(req, res, next) {
+  const allusers= await User.find({});
+  res.render("users", {users:allusers});
+}
+//delete user
+async function deleteUser(req, res, next){
+  const userId= req.params;
+  await User.findOneAndDelete({_id:req.params.userId})
+   
+      console.log(req.params);
+      res.status(200).json({message: req.params.userId});
+
+  
 }
 
+
+//add user 
 async function addUser(req, res, next) {
-  console.log(req.body);
   let newUser;
   const makeHashPassword = await bcrypt.hash(req.body.password, 12);
   if (req.files && req.files.length > 0) {
@@ -33,7 +48,7 @@ async function addUser(req, res, next) {
         },
       },
     });
-    console.log(error);
   }
 }
-module.exports = { getUsers, addUser };
+
+module.exports = { getUsers, addUser, deleteUser };

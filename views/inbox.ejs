@@ -14,15 +14,13 @@
           <di class="created-date"> Apr 16 </di>
           <div class="conversation-message">This is a message</div>
         </div>
-        <div class="conversation">
-          <img src="./images/user2.png" alt="Sumit" />
-          <div class="title-text">Sumit Saha</div>
-          <di class="created-date"> Apr 16 </di>
-          <div class="conversation-message">This is a message</div>
-        </div>
       </div>
       <div id="new-message-container">
-        <a href="#">+</a>
+        <div class="conversation">
+          
+          <img onClick="openModal()" src="./images/user1.png" alt="Sumit" />
+      
+        </div>
       </div>
       <div id="chat-title">
         <span>Sumit</span>
@@ -49,20 +47,7 @@
       </div>
     </div>
 
-    <div class="modal-wrapper">
-      <div class="modal">
-        <a href="#" class="modal-close">+</a>
-        <div class="modal-title">
-          <h2>Create New Conversation</h2>
-        </div>
-        <div class="modal-body">
-          <form>
-            <input type="text" placeholder="Name" />
-            <input type="text" placeholder="Username" />
-            <input type="button" value="Submit" />
-          </form>
-        </div>
-      </div>
-    </div>
+      <!-- Coverntion modal  -->
+      <%- include('./conversion.ejs'); %>
   </body>
 </html>

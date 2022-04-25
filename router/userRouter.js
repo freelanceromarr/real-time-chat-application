@@ -1,7 +1,7 @@
 const express = require("express");
 const Router = express.Router();
 const filehandle = require("../middleware/users/filehandle");
-const { getUsers, addUser } = require("../controller/userController");
+const { getUsers, addUser, deleteUser } = require("../controller/userController");
 const dynamicTitle = require("../middleware/title");
 const isLogin= require("../middleware/users/logincheck")
 const {
@@ -9,7 +9,7 @@ const {
   userValidationErrorHandler,
 } = require("../middleware/users/uservalidator");
 
-Router.get("/", dynamicTitle("Users"), isLogin, getUsers);
+Router.get("/", dynamicTitle("Users"), getUsers);
 
 //post user list
 Router.post(
@@ -19,5 +19,8 @@ Router.post(
   userValidationErrorHandler,
   addUser
 );
+
+//delete user 
+Router.post("/:userId", deleteUser);
 
 module.exports = Router;

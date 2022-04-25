@@ -1,0 +1,126 @@
+
+<div class="modal-wrapper" id="add-conversation-modal">
+    <div class="modal">
+      <a href="#"  class="modal-close" onClick="closeModal()">+</a>
+      <div class="modal-title">
+        <h2>Create New Conversation</h2>
+        <div id="uselist"></div>
+      </div>
+      <div class="modal-body">
+        <form id="add-conversation-form">
+            <input
+            type="text"
+            placeholder="search user by name or email or mobile"
+            name="user"
+            id="user"
+            autocomplete="off"
+          />
+          <p class="error"></p>
+        <div class="search_users" id="usersearch"></div>
+        <input type="submit" value="Submit" class="hide" />
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script> 
+    const modal = document.querySelector("#add-conversation-modal");
+    const form = document.querySelector("#add-conversation-form");
+    let typingTimer;
+    const timeInterval = 500;
+    const input= document.querySelector("input#user")
+    const conversationList= document.querySelector("#conversation-list")
+    let usersPlaceholder = document.querySelector("#usersearch")
+  
+    function closeModal() {
+      modal.style.display = "none";
+    }
+    function openModal() {
+      modal.style.display = "block";
+    }
+
+    // toast for conversation failure message
+    const conversationFailureToast = Toastify({
+    text: "Error creating a conversation!",
+    duration: 1000,
+  });
+
+    // Event firing for search 
+    input.addEventListener('keyup', function(){
+      clearTimeout(typingTimer);
+      usersPlaceholder.style.display = "none";
+      if(input.value){
+          typingTimer = setTimeout(searchUser, timeInterval)
+      }
+    });
+
+    input.addEventListener('keydown', function(){
+        clearTimeout(typingTimer);
+    })
+
+    async function searchUser(){
+        let response= await fetch('/inbox/search',{
+            method: 'POST', 
+            body: JSON.stringify({
+            user: input.value,
+            }),
+            headers: {
+            "Content-type": "application/json; charset=UTF-8",
+      },
+        })
+
+        let result = await response.json();
+        if (result.errors) {
+            const errorPlaceholder = document.querySelector("p.error");
+            errorPlaceholder.textContent = result.errors.common.msg;
+        }
+        else{
+            if (result.length > 0) {
+                let generateHtml = "<ul>";
+                result.forEach((user)=>{
+                    const avatar =  user.avatar ? "./uploads/avatars/" + user.avatar : "./images/nophoto.png"
+                    generateHtml += `<li onClick="createConversation('${user.userId}', '${user.usename}', '${user.avatar}')"> 
+                        <div class="conversation">
+                            <img src="${avatar}" alt="Sumit" />
+                            <div class="title-text">${user.name}</div>
+                        </div>
+                        </li>`;
+                        
+                });
+                generateHtml += '</ul>'
+                usersPlaceholder.innerHTML = generateHtml;
+                usersPlaceholder.style.display = "block"
+                console.log('user generated');
+            }
+        }
+    }
+
+    async function createConversation(participant_id, name, avatar){
+      try {
+        let response = await fetch("/inbox/conversation", {
+        method: 'POST',
+        body: {
+            id: participant_id,
+            name: name, 
+            avatar: avatar ? avatar : '/images/nophoto.png'
+        },
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      });
+      const result= response.json();
+      if (result.errors) {
+        throw new Error(result.errrors.common.msg)
+      }
+      else{
+        usersPlaceholder.style.display = "none"
+        input.value = name;
+        setTimeout(() => {location.reload()},1000)
+      }
+      } catch (error) {
+        conversationFailureToast.showToast()
+      }
+      
+      
+    }
+  </script>

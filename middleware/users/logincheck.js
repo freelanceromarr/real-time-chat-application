@@ -2,7 +2,6 @@
 const jwt = require('jsonwebtoken')
 const isLogin = (req, res, next)=>{
     let cookies = Object.keys(req.signedCookies).length > 0 ? req.signedCookies : null;
-    console.log(req);
     if (cookies) {
         try {
             const token = cookies[process.env.COOKIE_NAME];
