@@ -41,7 +41,7 @@ async function getintologin(req, res, next){
                 });
                 res.locals.userLogedIn= userObject;
                 
-                res.render('inbox');
+                res.redirect('/inbox');
                 // res.status(200).json({ message: 'successfully login'});
             } else {throw createError('Invalid login info')}
 

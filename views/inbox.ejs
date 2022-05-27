@@ -8,12 +8,19 @@
         <input type="text" placeholder="Search" />
       </div>
       <div id="conversation-list">
-        <div class="conversation active">
+        
+        <% if(conData.length > 0){conData.forEach(function(data) { %>
+        <div class="conversation active" onclick="getMessage('<%= data._id %>', '<%= data.creator.name %>')">
           <img src="./images/user1.png" alt="Sumit" />
-          <div class="title-text">Sumit Saha</div>
-          <di class="created-date"> Apr 16 </di>
+          <div class="title-text"><%= data.participant.name %></div>
+          <di class="created-date"> <%= data.last_updated %> </di>
           <div class="conversation-message">This is a message</div>
         </div>
+        <% })} else{ %>
+          <div class="conversation active">
+            <h3>Empty conversation</h3>
+          </div>
+          <% } %>
       </div>
       <div id="new-message-container">
         <div class="conversation">
@@ -46,8 +53,16 @@
         <input type="text" placeholder="Type a message" />
       </div>
     </div>
-
+    
       <!-- Coverntion modal  -->
       <%- include('./conversion.ejs'); %>
+   <div>
+  
+   </div> 
+   <script>
+      function getMessage(conversation_id, creator_name){
+        console.log(conversation_id, creator_name)
+      }
+   </script>
   </body>
 </html>

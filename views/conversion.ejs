@@ -45,6 +45,12 @@
     duration: 1000,
   });
 
+   // toast for conversation failure message
+   const conversationToast = Toastify({
+    text: "conversation created",
+    duration: 500,
+  });
+
     // Event firing for search 
     input.addEventListener('keyup', function(){
       clearTimeout(typingTimer);
@@ -76,13 +82,14 @@
         }
         else{
             if (result.length > 0) {
+              console.log(result);
                 let generateHtml = "<ul>";
-                result.forEach((user)=>{
-                    const avatar =  user.avatar ? "./uploads/avatars/" + user.avatar : "./images/nophoto.png"
-                    generateHtml += `<li onClick="createConversation('${user.userId}', '${user.usename}', '${user.avatar}')"> 
+                result.forEach((participant)=>{
+                    const avatar =  participant.avatar ? "./uploads/avatars/" + participant.avatar : "./images/nophoto.png"
+                    generateHtml += `<li onClick="createConversation('${participant._id}', '${participant.name}', '${avatar}')"> 
                         <div class="conversation">
                             <img src="${avatar}" alt="Sumit" />
-                            <div class="title-text">${user.name}</div>
+                            <div class="title-text">${participant.name}</div>
                         </div>
                         </li>`;
                         
@@ -99,11 +106,11 @@
       try {
         let response = await fetch("/inbox/conversation", {
         method: 'POST',
-        body: {
+        body: JSON.stringify({
             id: participant_id,
             name: name, 
-            avatar: avatar ? avatar : '/images/nophoto.png'
-        },
+            avatar: avatar
+        }),
         headers: {
           "Content-type": "application/json; charset=UTF-8",
         },
@@ -113,8 +120,13 @@
         throw new Error(result.errrors.common.msg)
       }
       else{
+        console.log(result);
         usersPlaceholder.style.display = "none"
         input.value = name;
+        conversationToast.showToast();
+
+        //response list 
+       
         setTimeout(() => {location.reload()},1000)
       }
       } catch (error) {

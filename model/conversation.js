@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const Conversation = mongoose.Schema({
+const conversationSchema = mongoose.Schema({
     creator: {
         id: mongoose.Types.ObjectId,
         name: String,
@@ -19,5 +19,6 @@ const Conversation = mongoose.Schema({
         timestamps:true
     }
     );
+    const Conversations = mongoose.model("Conversations", conversationSchema);
 
-    module.exports = Conversation;
+    module.exports = Conversations;
